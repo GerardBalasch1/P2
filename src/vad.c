@@ -51,12 +51,14 @@ Features compute_features(const float *x, int N) {
  * TODO: Init the values of vad_data
  */
 
-VAD_DATA * vad_open(float rate, float alfa1) {
+VAD_DATA * vad_open(float rate, float alfa1, float alfa2, float contador) {
   VAD_DATA *vad_data = malloc(sizeof(VAD_DATA));
   vad_data->state = ST_INIT;
   vad_data->sampling_rate = rate;
   vad_data->frame_length = rate * FRAME_TIME * 1e-3;
   vad_data->alfa1 = alfa1;
+  vad_data->alfa2 = alfa2;
+  vad_data->contador = contador;
   return vad_data;
 }
 
@@ -91,29 +93,76 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
 
   switch (vad_data->state) {
   case ST_INIT:
-    vad_data->state = ST_SILENCE;
-    vad_data->umbral = f.p + vad_data->alfa1;
+    vad_data->umbral = f.p + vad_data->alfa1; //-0.5
+    vad_data->umbral2 = f.p + vad_data->alfa2; //+7.5
+    if(f.p < vad_data->umbral2){
+      vad_data->state = ST_SILENCE;
+      vad_data->contador = 3;
+    }else{
+      vad_data->state = ST_INIT;
+    }
+    
     break;
 
   case ST_SILENCE:
-    if (f.p > vad_data->umbral){
-      vad_data->state = ST_VOICE;
+    if (f.p > vad_data->umbral2){
+      vad_data->contador--;
+      vad_data->state = ST_MAYBEVOICE;
+    }else if(f.p < vad_data->umbral2){
+      vad_data->state = ST_SILENCE;
+    }else if(f.p < vad_data->umbral2){
+      vad_data->contador--;
+      vad_data->state = ST_MAYBESILENCE; 
     }
     break;
 
   case ST_VOICE:
     if (f.p < vad_data->umbral){
-      vad_data->state = ST_SILENCE;
+      vad_data->contador--;
+      vad_data->state = ST_MAYBESILENCE;
+    }else if(f.p > vad_data->umbral){
+      vad_data->state = ST_VOICE;
+    }else if(f.p > vad_data->umbral2){
+      vad_data->contador--;
+      vad_data->state = ST_MAYBEVOICE;
     }
     break;
+
+  case ST_MAYBEVOICE:
+    if((f.p > vad_data->umbral) || (vad_data->contador==0)){
+      vad_data->state = ST_VOICE;
+      vad_data->contador = 3;
+    }else if((f.p < vad_data->umbral2) || (vad_data->contador==0)){
+      vad_data->state = ST_SILENCE;
+      vad_data->contador = 3;
+    }else{
+      vad_data->state = ST_MAYBEVOICE;
+      vad_data->contador--;
+    }
+    break;
+
+  case ST_MAYBESILENCE:
+    if((f.p > vad_data->umbral) || (vad_data->contador == 0)){
+      vad_data->state = ST_VOICE;
+      vad_data->contador = 3;
+    }else if((f.p < vad_data->umbral2) || (vad_data->contador == 0)){
+      vad_data->state = ST_SILENCE;
+      vad_data->contador = 3;
+    }else{
+      vad_data->state = ST_MAYBESILENCE;
+      vad_data->contador--;
+    }
+  break;
 
   case ST_UNDEF:
     break;
   }
 
-  if (vad_data->state == ST_SILENCE ||
-      vad_data->state == ST_VOICE)
-    return vad_data->state;
+//AIXO S'HA DE CANVIAR
+  if (vad_data->state == ST_SILENCE)
+    return ST_SILENCE;
+  else if(vad_data->state == ST_VOICE)
+    return ST_VOICE;
   else
     return ST_UNDEF;
 }
