@@ -25,6 +25,8 @@ int main(int argc, char *argv[]) {
   unsigned int t, last_t; /* in frames */
 
   char	*input_wav, *output_vad, *output_wav;
+  float alfa1, alfa2;
+  float nundef;
 
   DocoptArgs args = docopt(argc, argv, /* help */ 1, /* version */ "2.0");
 
@@ -32,7 +34,9 @@ int main(int argc, char *argv[]) {
   input_wav  = args.input_wav;
   output_vad = args.output_vad;
   output_wav = args.output_wav;
-  float alfa1 = atof(args.alfa1);
+  alfa1 = atof(args.alfa1);
+  alfa2 = atof(args.alfa2);
+  nundef = atof(args.nundef);
 
   if (input_wav == 0 || output_vad == 0) {
     fprintf(stderr, "%s\n", args.usage_pattern);
@@ -64,7 +68,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  vad_data = vad_open(sf_info.samplerate, alfa1);
+  vad_data = vad_open(sf_info.samplerate, alfa1, alfa2, nundef);
   /* Allocate memory for buffers */
   frame_size   = vad_frame_size(vad_data);
   buffer       = (float *) malloc(frame_size * sizeof(float));
@@ -72,7 +76,9 @@ int main(int argc, char *argv[]) {
   for (i=0; i< frame_size; ++i) buffer_zeros[i] = 0.0F;
 
   frame_duration = (float) frame_size/ (float) sf_info.samplerate;
-  last_state = ST_UNDEF;
+
+  last_state = ST_SILENCE;
+  float startTime = 0.0, btwnTime;
 
   for (t = last_t = 0; ; t++) { /* For each frame ... */
     /* End loop when file has finished (or there is an error) */
@@ -85,14 +91,24 @@ int main(int argc, char *argv[]) {
     state = vad(vad_data, buffer);
     if (verbose & DEBUG_VAD) vad_show_state(vad_data, stdout);
 
+    // fprintf(vadfile, "%.5f\t%.5f\t%s\n", startTime, btwnTime, state2str(last_state));
+    
     /* TODO: print only SILENCE and VOICE labels */
-    /* As it is, it prints UNDEF segments but is should be merge to the proper value */
-    if (state != last_state) {
-      if (t != last_t)
-        fprintf(vadfile, "%.5f\t%.5f\t%s\n", last_t * frame_duration, t * frame_duration, state2str(last_state));
+    /* As it is, it prints UNDEF segments but it should be merge to the proper value */
+    if (state == last_state) btwnTime = t * frame_duration;
+    if (state != ST_UNDEF && state != last_state) {
+      fprintf(vadfile, "%.5f\t%.5f\t%s\n", startTime, btwnTime, state2str(last_state));
       last_state = state;
-      last_t = t;
+      startTime = btwnTime;
+      btwnTime = t * frame_duration;
     }
+    
+    // if (state != last_state) {
+    //   if (t != last_t)
+    //     fprintf(vadfile, "%f -> %.5f\t%.5f\t%s\n", vad_data->last_feature, last_t * frame_duration, t * frame_duration, state2str(last_state));
+    //   last_state = state;
+    //   last_t = t;
+    // }
 
     if (sndfile_out != 0) {
       /* TODO: go back and write zeros in silence segments */
@@ -102,7 +118,8 @@ int main(int argc, char *argv[]) {
   state = vad_close(vad_data);
   /* TODO: what do you want to print, for last frames? */
   if (t != last_t)
-    fprintf(vadfile, "%.5f\t%.5f\t%s\n", last_t * frame_duration, t * frame_duration + n_read / (float) sf_info.samplerate, state2str(state));
+    // fprintf(vadfile, "%.5f\t%.5f\t%s\n", startTime, t * frame_duration + n_read / (float) sf_info.samplerate, state2str(last_state));
+    fprintf(vadfile, "%.5f\t%.5f\t%s\n", startTime, t * frame_duration, state2str(last_state));
 
   /* clean up: free memory, close open files */
   free(buffer);
