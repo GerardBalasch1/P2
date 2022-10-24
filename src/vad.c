@@ -43,7 +43,7 @@ Features compute_features(const float *x, int N) {
    * For the moment, compute random value between 0 and 1 
    */
   Features feat;
-  feat.p = compute_power (x,N);
+  feat.p = compute_power(x,N);
   return feat;
 }
 
@@ -92,46 +92,46 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
   vad_data->last_feature = f.p; /* save feature, in case you want to show */
 
   switch (vad_data->state) {
-  case ST_INIT:
-    vad_data->umbral1 = f.p + vad_data->alfa1;
-    vad_data->umbral2 = f.p + vad_data->alfa2;
-    vad_data->state = ST_SILENCE;
-    break;
-
-  case ST_SILENCE:
-    if (f.p > vad_data->umbral1) {
-      vad_data->state = ST_MAYBE_V;
-      vad_data->count = 1;
-    }
-    break;
-
-  case ST_VOICE:
-    if (f.p < vad_data->umbral2) {
-      vad_data->state = ST_MAYBE_S;
-       vad_data->count = 1;
-    }
-    break;
-
-  case ST_MAYBE_V:
-    if (f.p > vad_data->umbral1) {
-      vad_data->count++;
-      if (vad_data->count >= vad_data->nundef){
-        vad_data->state = ST_VOICE;
-      }
-    } else {
+    case ST_INIT:
+      vad_data->umbral1 = f.p + vad_data->alfa1;
+      vad_data->umbral2 = f.p + vad_data->alfa2;
       vad_data->state = ST_SILENCE;
-    }
-    break;
-  case ST_MAYBE_S:
-    if (f.p < vad_data->umbral2) {
-      vad_data->count++;
-      if (vad_data->count >= vad_data->nundef){
+      break;
+
+    case ST_SILENCE:
+      if (f.p > vad_data->umbral1) {
+        vad_data->state = ST_MAYBE_V;
+        vad_data->count = 1;
+      }
+      break;
+
+    case ST_VOICE:
+      if (f.p < vad_data->umbral2) {
+        vad_data->state = ST_MAYBE_S;
+        vad_data->count = 1;
+      }
+      break;
+
+    case ST_MAYBE_V:
+      if (f.p > vad_data->umbral1) {
+        vad_data->count++;
+        if (vad_data->count >= vad_data->nundef){
+          vad_data->state = ST_VOICE;
+        }
+      } else {
         vad_data->state = ST_SILENCE;
       }
-    } else {
-      vad_data->state = ST_VOICE;
-    }
-    break;
+      break;
+    case ST_MAYBE_S:
+      if (f.p < vad_data->umbral2) {
+        vad_data->count++;
+        if (vad_data->count >= vad_data->nundef){
+          vad_data->state = ST_SILENCE;
+        }
+      } else {
+        vad_data->state = ST_VOICE;
+      }
+      break;
   }
 
 //AIXO S'HA DE CANVIAR

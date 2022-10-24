@@ -1,5 +1,9 @@
 #!/bin/bash
 
+alfa1=${1:-6}
+alfa2=${2:-7}
+nundef=${3:-11}
+
 # Be sure that this file has execution permissions:
 # Use the nautilus explorer or chmod +x run_vad.sh
 

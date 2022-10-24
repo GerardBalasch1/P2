@@ -25,8 +25,7 @@ int main(int argc, char *argv[]) {
   unsigned int t, last_t; /* in frames */
 
   char	*input_wav, *output_vad, *output_wav;
-  float alfa1;
-  float alfa2;
+  float alfa1, alfa2;
   float nundef;
 
   DocoptArgs args = docopt(argc, argv, /* help */ 1, /* version */ "2.0");
@@ -77,8 +76,8 @@ int main(int argc, char *argv[]) {
   for (i=0; i< frame_size; ++i) buffer_zeros[i] = 0.0F;
 
   frame_duration = (float) frame_size/ (float) sf_info.samplerate;
-  
-  last_state = ST_UNDEF;
+
+  last_state = ST_SILENCE;
   float startTime = 0.0, btwnTime;
 
   for (t = last_t = 0; ; t++) { /* For each frame ... */
@@ -93,9 +92,10 @@ int main(int argc, char *argv[]) {
     state = vad(vad_data, buffer);
     if (verbose & DEBUG_VAD) vad_show_state(vad_data, stdout);
 
+    // fprintf(vadfile, "%.5f\t%.5f\t%s\n", startTime, btwnTime, state2str(last_state));
+    
     /* TODO: print only SILENCE and VOICE labels */
-    /* As it is, it prints UNDEF segments but is should be merge to the proper value */
-    //CORREGIR
+    /* As it is, it prints UNDEF segments but it should be merge to the proper value */
     if (state == last_state) btwnTime = t * frame_duration;
     if (state != ST_UNDEF && state != last_state) {
       fprintf(vadfile, "%.5f\t%.5f\t%s\n", startTime, btwnTime, state2str(last_state));
@@ -119,7 +119,8 @@ int main(int argc, char *argv[]) {
   state = vad_close(vad_data);
   /* TODO: what do you want to print, for last frames? */
   if (t != last_t)
-    fprintf(vadfile, "%.5f\t%.5f\t%s\n", last_t * frame_duration, t * frame_duration + n_read / (float) sf_info.samplerate, state2str(state));
+    // fprintf(vadfile, "%.5f\t%.5f\t%s\n", startTime, t * frame_duration + n_read / (float) sf_info.samplerate, state2str(last_state));
+    fprintf(vadfile, "%.5f\t%.5f\t%s\n", startTime, t * frame_duration, state2str(last_state));
 
   /* clean up: free memory, close open files */
   free(buffer);

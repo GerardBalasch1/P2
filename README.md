@@ -105,15 +105,22 @@ Ejercicios
   continuación, una captura de `wavesurfer` en la que se vea con claridad la señal temporal, el contorno de
   potencia y la tasa de cruces por cero, junto con el etiquetado manual de los segmentos.
 
+<img width="1366" alt="Etiqueta de los segmentos de voz y silencio" src="img/pav_4111.png">
 
 - A la vista de la gráfica, indique qué valores considera adecuados para las magnitudes siguientes:
 
 	* Incremento del nivel potencia en dB, respecto al nivel correspondiente al silencio inicial, para
 	  estar seguros de que un segmento de señal se corresponde con voz.
 
+	De forma general, cuando el nivel de potencia en dB es superior a unos 20dB se trata de voz, y cuando es menor, corresponde a silencio.
+
 	* Duración mínima razonable de los segmentos de voz y silencio.
 
+	Haciendo una prueba, si grabamos una sola vocal, difícilmente la duración es menor a 0.2 segundos.
+
 	* ¿Es capaz de sacar alguna conclusión a partir de la evolución de la tasa de cruces por cero?
+
+	GeneraLmente, los tramos de silencio tienen un valor de zcr muy bajo (si no cero), esto es debido a que el sistema de grabación de algunos portátiles ya tiene un detector de silencio y elimina el valor de las muestras.
 
 
 ### Desarrollo del detector de actividad vocal
