@@ -18,8 +18,8 @@ typedef struct {
     /* options with arguments */
     char *alfa1;
     char *alfa2;
-    char *contador;
     char *input_wav;
+    char *nundef;
     char *output_vad;
     char *output_wav;
     /* special */
@@ -39,9 +39,9 @@ const char help_message[] =
 "   -i FILE, --input-wav=FILE   WAVE file for voice activity detection\n"
 "   -o FILE, --output-vad=FILE  Label file with the result of VAD\n"
 "   -w FILE, --output-wav=FILE  WAVE file with silences cleared\n"
-"   -1 REAL, --alfa1=REAL  Increment de l'umbral 1 [default: 0]\n"
-"   -1 REAL, --alfa2=REAL  Increment de l'umbral 2 [default: 0]\n"
-"   -1 REAL, --contador=REAL  Contador d'estats indefinits [default: 0]\n"
+"   -1 REAL, --alfa1=REAL  Increment del llindar alfa 1 [default: 6]\n"
+"   -2 REAL, --alfa2=REAL  Increment del llindar alfa 2 [default: 7]\n"
+"   -n REAL, --nundef=REAL  Valor del comptador [default: 11]\n"
 "   -v, --verbose  Show debug information\n"
 "   -h, --help     Show this screen\n"
 "   --version      Show the version of the project\n"
@@ -282,12 +282,12 @@ int elems_to_args(Elements *elements, DocoptArgs *args, bool help,
         } else if (!strcmp(option->olong, "--alfa2")) {
             if (option->argument)
                 args->alfa2 = option->argument;
-        } else if (!strcmp(option->olong, "--contador")) {
-            if (option->argument)
-                args->contador = option->argument;
         } else if (!strcmp(option->olong, "--input-wav")) {
             if (option->argument)
                 args->input_wav = option->argument;
+        } else if (!strcmp(option->olong, "--nundef")) {
+            if (option->argument)
+                args->nundef = option->argument;
         } else if (!strcmp(option->olong, "--output-vad")) {
             if (option->argument)
                 args->output_vad = option->argument;
@@ -314,7 +314,7 @@ int elems_to_args(Elements *elements, DocoptArgs *args, bool help,
 
 DocoptArgs docopt(int argc, char *argv[], bool help, const char *version) {
     DocoptArgs args = {
-        0, 0, 0, (char*) "0", (char*) "0", (char*) "0", NULL, NULL, NULL,
+        0, 0, 0, (char*) "6", (char*) "7", NULL, (char*) "11", NULL, NULL,
         usage_pattern, help_message
     };
     Tokens ts;
@@ -327,9 +327,9 @@ DocoptArgs docopt(int argc, char *argv[], bool help, const char *version) {
         {"-v", "--verbose", 0, 0, NULL},
         {NULL, "--version", 0, 0, NULL},
         {"-1", "--alfa1", 1, 0, NULL},
-        {"-1", "--alfa2", 1, 0, NULL},
-        {"-1", "--contador", 1, 0, NULL},
+        {"-2", "--alfa2", 1, 0, NULL},
         {"-i", "--input-wav", 1, 0, NULL},
+        {"-n", "--nundef", 1, 0, NULL},
         {"-o", "--output-vad", 1, 0, NULL},
         {"-w", "--output-wav", 1, 0, NULL}
     };
