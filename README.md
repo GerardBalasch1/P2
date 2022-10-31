@@ -141,7 +141,7 @@ El primer .lab de la imagen corresponde a la detección automática y el segundo
   continuación las tasas de sensibilidad (*recall*) y precisión para el conjunto de la base de datos (sólo
   el resumen).
 
-<img width="1366" alt="Tasa sensibilidad y precision" src="img/recallprecision.png">
+<img width="683" alt="Tasa sensibilidad y precision" src="img/recallprecision.png">
 
 
 ### Trabajos de ampliación
