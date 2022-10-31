@@ -141,7 +141,7 @@ El primer .lab de la imagen corresponde a la detección automática y el segundo
   continuación las tasas de sensibilidad (*recall*) y precisión para el conjunto de la base de datos (sólo
   el resumen).
 
-  ![Image text](https://github.com/GerardBalasch1/P2/img/93,54%.png)
+<img width="1366" alt="Tasa sensibilidad y precision" src="img/93,54%.png">
 
 
 ### Trabajos de ampliación
@@ -156,8 +156,7 @@ El primer .lab de la imagen corresponde a la detección automática y el segundo
 
 - Si ha usado `docopt_c` para realizar la gestión de las opciones y argumentos del programa `vad`, inserte
   una captura de pantalla en la que se vea el mensaje de ayuda del programa.
-
-![Image text](https://github.com/GerardBalasch1/P2/img/vad.docopt.png)
+<img width="1366" alt="Editar vad.docopt" src="img/vad.docopt.png">
 
 ### Contribuciones adicionales y/o comentarios acerca de la práctica
 
