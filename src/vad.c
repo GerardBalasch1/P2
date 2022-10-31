@@ -44,6 +44,8 @@ Features compute_features(const float *x, int N) {
    */
   Features feat;
   feat.p = compute_power(x,N);
+  feat.zcr = compute_zcr(x,N,16000);
+  feat.am = compute_am(x,N);
   return feat;
 }
 

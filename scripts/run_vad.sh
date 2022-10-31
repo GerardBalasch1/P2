@@ -1,6 +1,6 @@
 #!/bin/bash
 
-alfa1=${1:-6}
+alfa1=${1:-6.1}
 alfa2=${2:-7}
 nundef=${3:-11}
 
