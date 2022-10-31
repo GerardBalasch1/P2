@@ -9,7 +9,7 @@ Options:
    -i FILE, --input-wav=FILE   WAVE file for voice activity detection
    -o FILE, --output-vad=FILE  Label file with the result of VAD
    -w FILE, --output-wav=FILE  WAVE file with silences cleared
-   -1 REAL, --alfa1=REAL  Increment del llindar alfa 1 [default: 6]
+   -1 REAL, --alfa1=REAL  Increment del llindar alfa 1 [default: 6.1]
    -2 REAL, --alfa2=REAL  Increment del llindar alfa 2 [default: 7]
    -n REAL, --nundef=REAL  Valor del comptador [default: 11]
    -v, --verbose  Show debug information

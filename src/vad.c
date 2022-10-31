@@ -44,6 +44,8 @@ Features compute_features(const float *x, int N) {
    */
   Features feat;
   feat.p = compute_power(x,N);
+  feat.zcr = compute_zcr(x,N,16000);
+  feat.am = compute_am(x,N);
   return feat;
 }
 
@@ -134,7 +136,6 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
       break;
   }
 
-//AIXO S'HA DE CANVIAR
   if (vad_data->state == ST_SILENCE)
     return ST_SILENCE;
   else if(vad_data->state == ST_VOICE)

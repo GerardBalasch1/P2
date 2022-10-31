@@ -39,7 +39,7 @@ const char help_message[] =
 "   -i FILE, --input-wav=FILE   WAVE file for voice activity detection\n"
 "   -o FILE, --output-vad=FILE  Label file with the result of VAD\n"
 "   -w FILE, --output-wav=FILE  WAVE file with silences cleared\n"
-"   -1 REAL, --alfa1=REAL  Increment del llindar alfa 1 [default: 6]\n"
+"   -1 REAL, --alfa1=REAL  Increment del llindar alfa 1 [default: 6.1]\n"
 "   -2 REAL, --alfa2=REAL  Increment del llindar alfa 2 [default: 7]\n"
 "   -n REAL, --nundef=REAL  Valor del comptador [default: 11]\n"
 "   -v, --verbose  Show debug information\n"
@@ -314,7 +314,7 @@ int elems_to_args(Elements *elements, DocoptArgs *args, bool help,
 
 DocoptArgs docopt(int argc, char *argv[], bool help, const char *version) {
     DocoptArgs args = {
-        0, 0, 0, (char*) "6", (char*) "7", NULL, (char*) "11", NULL, NULL,
+        0, 0, 0, (char*) "6.1", (char*) "7", NULL, (char*) "11", NULL, NULL,
         usage_pattern, help_message
     };
     Tokens ts;

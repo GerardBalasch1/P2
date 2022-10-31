@@ -120,7 +120,7 @@ Ejercicios
 
 	* ¿Es capaz de sacar alguna conclusión a partir de la evolución de la tasa de cruces por cero?
 
-	GeneraLmente, los tramos de silencio tienen un valor de zcr muy bajo (si no cero), esto es debido a que el sistema de grabación de algunos portátiles ya tiene un detector de silencio y elimina el valor de las muestras.
+	Generalmente, los tramos de silencio tienen un valor de zcr muy bajo (si no cero), esto es debido a que el sistema de grabación de algunos portátiles ya tiene un detector de silencio y elimina el valor de las muestras.
 
 
 ### Desarrollo del detector de actividad vocal
@@ -131,11 +131,17 @@ Ejercicios
 - Inserte una gráfica en la que se vea con claridad la señal temporal, el etiquetado manual y la detección
   automática conseguida para el fichero grabado al efecto. 
 
+![Image text](https://github.com/GerardBalasch1/P2/img/pav_4111_auto.png)  
+
 - Explique, si existen. las discrepancias entre el etiquetado manual y la detección automática.
+
+El primer .lab de la imagen corresponde a la detección automática y el segundo al etiquetado manual. Podemos ver que hay pocas discrepancias ya que en el intervalo 8.71-9.00 segundos nuestro detector detecta silencio aunque hay un pequeño repunte de potencia, sin embargo alrededor del segundo 9.75 no está marcado el intervalo de voz y ve correctamente que se trata de silencio.
 
 - Evalúe los resultados sobre la base de datos `db.v4` con el script `vad_evaluation.pl` e inserte a 
   continuación las tasas de sensibilidad (*recall*) y precisión para el conjunto de la base de datos (sólo
   el resumen).
+
+  ![Image text](https://github.com/GerardBalasch1/P2/img/93,54%.png)
 
 
 ### Trabajos de ampliación
@@ -151,6 +157,7 @@ Ejercicios
 - Si ha usado `docopt_c` para realizar la gestión de las opciones y argumentos del programa `vad`, inserte
   una captura de pantalla en la que se vea el mensaje de ayuda del programa.
 
+![Image text](https://github.com/GerardBalasch1/P2/img/vad.docopt.png)
 
 ### Contribuciones adicionales y/o comentarios acerca de la práctica
 
@@ -160,6 +167,7 @@ Ejercicios
 - Si lo desea, puede realizar también algún comentario acerca de la realización de la práctica que
   considere de interés de cara a su evaluación.
 
+Para optimizar el programa hemos programado los 4 estados en los que se puede encontrar: VOICE, SILENCE, MAYBE VOICE y MAYBE SILENCE. Hemos creado los valores de los umbrales para determinar los diferentes estados a partir de los parámetros alfa1 y alfa2 que al hacer diferentes pruebas hemos llegado a la conclusión que los valores más óptimos son alfa1=6.1 y alfa2=7. También incluimos la varible nundef que representa el número de tramas cojidas para hacer la comparación. El valor más optimo para este parámetro es nundef=11.
 
 ### Antes de entregar la práctica
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-alfa1=${1:-6}
+alfa1=${1:-6.1}
 alfa2=${2:-7}
 nundef=${3:-11}
 
@@ -22,7 +22,7 @@ for filewav in $DB/*/*wav; do
 
     filevad=${filewav/.wav/.vad}
 
-    $CMD -1 $ALPHA1 -2 $ALPHA2 -i $filewav -o $filevad || exit 1
+    $CMD -i $filewav -o $filevad || exit 1
 
 # Alternatively, uncomment to create output wave files
 #    filewavOut=${filewav/.wav/.vad.wav}
