@@ -131,7 +131,7 @@ Ejercicios
 - Inserte una gráfica en la que se vea con claridad la señal temporal, el etiquetado manual y la detección
   automática conseguida para el fichero grabado al efecto. 
 
-![Image text](https://github.com/GerardBalasch1/P2/img/pav_4111_auto.png)  
+<img width="1366" alt="Etiqueta det automática de los segmentos de voz y silencio" src="img/pav_4111_auto.png">  
 
 - Explique, si existen. las discrepancias entre el etiquetado manual y la detección automática.
 
