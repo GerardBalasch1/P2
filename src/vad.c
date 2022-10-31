@@ -134,7 +134,6 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
       break;
   }
 
-//AIXO S'HA DE CANVIAR
   if (vad_data->state == ST_SILENCE)
     return ST_SILENCE;
   else if(vad_data->state == ST_VOICE)
